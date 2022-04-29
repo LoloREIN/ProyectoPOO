@@ -17,11 +17,9 @@ from tkinter import ttk
 from tkinter import *
 import pandas as pd
 from PIL import ImageTk, Image
-import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
-import os
 import dash
 
 from matplotlib.figure import Figure
@@ -308,10 +306,6 @@ class MenuBar(tk.Menu):
         menu_positions.add_command(label="2010", command=lambda: parent.show_frame(Map2010))
         menu_positions.add_command(label="2019", command=lambda: parent.show_frame(Map2019))
 
-        menu_help = tk.Menu(self, tearoff=0)
-        self.add_cascade(label="Menu5", menu=menu_help)
-        menu_help.add_command(label="Open New Window", command=lambda: parent.OpenNewWindow())
-
 
 class MyApp(tk.Tk):
 
@@ -341,8 +335,6 @@ class MyApp(tk.Tk):
         # tkraise lleva el frame a primer plano
         frame.tkraise()
 
-    def OpenNewWindow(self):
-        OpenNewWindow()
 
     # Funcion que destruye al elemento/objeto del que se invoca
     def Quit(self):
@@ -370,9 +362,9 @@ class Paises(GUI):  # inherits from the GUI class
 
         frame2 = tk.LabelFrame(self, frame_styles, text="Graficas por País")
         frame2.place(rely=0.05, relx=0.45, height=500, width=500)
-        mylabel = Label(frame2, text="Select a country",
-                        font=("Helvetica", 14), fg="grey")
-        mylabel.pack(pady=20)
+        mylabel = Label(frame2, text="Elige un País",
+                        font=("Helvetica", 14),bg = "grey", fg="light blue")
+        mylabel.pack(pady=10)
         countries = []
         countriesFile = dataFile['Country'].tolist()
         countries.append("Select a country")
@@ -502,8 +494,6 @@ class years(GUI):
 
         frame2 = tk.LabelFrame(self, frame_styles, text="Analisis de Basura per Capita")
         frame2.place(rely=0.1, relx=0.52, height=500, width=450)
-        # df['Promedio2010'] = (df['Total_MismanagedPlasticWaste_2010 (millionT)'].sum()/ df['Total_MismanagedPlasticWaste_2010 (millionT)'].len()).astype(float)
-        # df['Promedio2010'] = (df['Total_MismanagedPlasticWaste_2019 (millionT)'].sum()/ df['Total_MismanagedPlasticWaste_2019 (millionT)'].len()).astype(float)
         v1 = df.iloc[:, 3].sum()
         v2 = df.iloc[:, 4].sum()
         x = ['2010', '2019']
@@ -565,15 +555,13 @@ class Map2010(GUI):
 
         label1 = tk.Label(self.main_frame, font=("Verdana", 20), bg="grey", text=" Mapa 2010")
         label1.pack(side="top")
-
         frame1 = tk.LabelFrame(self, frame_styles, text="Mapa creado con Plotly express")
         frame1.place(rely=0.1, relx=0.05, height=500, width=450)
-        '''img = Image.open('2010.png')
-        tkimage = ImageTk.PhotoImage(img)
-        lbl = tk.Label(frame1, image=tkimage)
-        lbl.place(x=1, y=1)
-        #label1.pack(fill="both")
-'''
+
+        label = Label(frame1, image=ImageTk.PhotoImage(Image.open("2010.png")))
+        label.pack()
+
+
 class Map2019(GUI):
     def __init__(self, parent, controller):
         GUI.__init__(self, parent)
@@ -590,25 +578,6 @@ class PageTwo(GUI):
         label1 = tk.Label(self.main_frame, font=("Verdana", 20), text="Page Two")
         label1.pack(side="top")
 
-
-class OpenNewWindow(tk.Tk):
-    def __init__(self, *args, **kwargs):
-        tk.Tk.__init__(self, *args, **kwargs)
-
-        main_frame = tk.Frame(self)
-        main_frame.pack_propagate(0)
-        main_frame.pack(fill="both", expand="true")
-        main_frame.grid_rowconfigure(0, weight=1)
-        main_frame.grid_columnconfigure(0, weight=1)
-        self.title("Here is the Title of the Window")
-        self.geometry("500x500")
-        self.resizable(0, 0)
-
-        frame1 = ttk.LabelFrame(main_frame, text="This is a ttk LabelFrame")
-        frame1.pack(expand=True, fill="both")
-
-        label1 = tk.Label(frame1, font=("Verdana", 20), text="OpenNewWindow Page")
-        label1.pack(side="top")
 
 # se crea el login
 top = LoginPage()
