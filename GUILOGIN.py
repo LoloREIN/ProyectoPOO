@@ -364,16 +364,21 @@ class MyApp(tk.Tk):
 
 
 # Clase GUI(Graphic User Interface) la cual hereda la clase frame de Tkinter
+# Clase "Padre" - Nuestro set up
 class GUI(tk.Frame):
     def __init__(self, parent):
         tk.Frame.__init__(self, parent)
+        # Se le dan caracteristicas al Main Frame
         self.main_frame = tk.Frame(self, bg="grey", height=600, width=1024)
+        # se le da Posicion y tamaño
         self.main_frame.pack(fill="both", expand="true")
+        # se confirgura el espacio renglon para los componentes
         self.main_frame.grid_rowconfigure(0, weight=1)
+        # se confirgura el espacio columna para los componentes
         self.main_frame.grid_columnconfigure(0, weight=1)
 
-
-class Paises(GUI):  # inherits from the GUI class
+# Objeto de tipo clase Pais que hereda a GUI
+class Paises(GUI):
     def __init__(self, parent, controller):
         GUI.__init__(self, parent)
 
@@ -513,6 +518,11 @@ class years(GUI):
         canvas = FigureCanvasTkAgg(fig, master=frame1)
         canvas.draw()
         canvas.get_tk_widget().pack(fill="both")
+        FrameWeb = HTMLLabel(frame1, html="<h2>Grafica de Basura total(Promedio)</h2>\
+                                      <p>En esta grafica se ve el total de basura sumada de cada pais por año\
+                                      </p>\
+                                          </div>")
+        FrameWeb.pack(fill="both", side = "bottom")
 
         frame2 = tk.LabelFrame(self, frame_styles, text="Analisis de Basura per Capita")
         frame2.place(rely=0.1, relx=0.52, height=500, width=450)
@@ -529,6 +539,11 @@ class years(GUI):
         canvas = FigureCanvasTkAgg(fig, master=frame2)
         canvas.draw()
         canvas.get_tk_widget().pack(fill="both")
+        FrameWeb = HTMLLabel(frame1, html="<h3>Grafica de Basura total per capita(promedio)</h3>\
+                                              <p>En esta grafica se ve el total de basura sumada de cada pais por año\
+                                              </p>\
+                                                  </div>")
+        FrameWeb.pack(fill="both", side="bottom")
 
 
 class Map2010(GUI):
