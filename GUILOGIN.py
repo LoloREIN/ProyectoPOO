@@ -19,8 +19,10 @@ import pandas as pd
 from PIL import ImageTk, Image
 import matplotlib.pyplot as plt
 import seaborn as sns
+from tkhtmlview import HTMLLabel
 import plotly.express as px
 import dash
+
 
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,
@@ -293,18 +295,29 @@ class MenuBar(tk.Menu):
         menu_file.add_command(label="Salir", command=lambda: parent.Quit())
         # se crea otro menu, el tearoff es para que no nos salga un elemento vacio por defecto
         YearComparison = tk.Menu(self, tearoff=0)
-        # se crea una "cascada"/elemntos deplegados en el primer espacio con el nombre Barplot,
+        # se crea una "cascada"/elemntos deplegados en el segundo espacio con el nombre Barplot,
         self.add_cascade(label="Barplot", menu=YearComparison)
+        # se agrega un elemento a la cascada llamado años, el cual,
         # invoca la funcion Show frame con "years" como parametro
         YearComparison.add_command(label="Años", command=lambda: parent.show_frame(years))
 
-        menu_operations = tk.Menu(self, tearoff=0)
-        self.add_cascade(label="Menu3", menu=menu_operations)
-        menu_operations.add_command(label="Page Two", command=lambda: parent.show_frame(PageTwo))
-        menu_positions = tk.Menu(menu_operations, tearoff=0)
-        menu_operations.add_cascade(label="Mapas", menu=menu_positions)
-        menu_positions.add_command(label="2010", command=lambda: parent.show_frame(Map2010))
-        menu_positions.add_command(label="2019", command=lambda: parent.show_frame(Map2019))
+        # crea un menu de tkinter
+        menu_proyect = tk.Menu(self, tearoff=0)
+        # se crea una "cascada"/elemntos deplegados en el tercer espacio con el nombre Info,
+        self.add_cascade(label="Info", menu=menu_proyect)
+        # se agrega un elemento a la cascada llamado Promedios, el cual,
+        # invoca la funcion Show frame con "Promedio" como parametro
+        menu_proyect.add_command(label="Promedios", command=lambda: parent.show_frame(Promedio))
+        # crea un menu de tkinter
+        menu_maps = tk.Menu(menu_proyect, tearoff=0)
+        # se crea una "cascada"/elemntos deplegados dentro del 3er menu con el nombre Mapas,
+        menu_proyect.add_cascade(label="Mapas", menu=menu_maps)
+        # se agrega un elemento a la cascada llamado 2010, el cual,
+        # invoca la funcion Show frame con "Map2010" como parametro
+        menu_maps.add_command(label="2010", command=lambda: parent.show_frame(Map2010))
+        # se agrega un elemento a la cascada llamado 2019, el cual,
+        # invoca la funcion Show frame con "Map2019" como parametro
+        menu_maps.add_command(label="2019", command=lambda: parent.show_frame(Map2019))
 
 
 class MyApp(tk.Tk):
@@ -319,7 +332,7 @@ class MyApp(tk.Tk):
         # self.resizable(0, 0) prevents the app from being resized
         # self.geometry("1024x600") fixes the applications size
         self.frames = {}
-        pages = (Paises, years, PageTwo, Map2010, Map2019)
+        pages = (Paises, years, Promedio, Map2010, Map2019)
         for F in pages:
             frame = F(main_frame, self)
             self.frames[F] = frame
@@ -367,7 +380,7 @@ class Paises(GUI):  # inherits from the GUI class
         mylabel.pack(pady=10)
         countries = []
         countriesFile = dataFile['Country'].tolist()
-        countries.append("Select a country")
+        countries.append("--Pais--")
         countries.extend(countriesFile)
 
         def plot(wasteList, perCapitaList):
@@ -490,7 +503,7 @@ class years(GUI):
         plt.title('Total de basura Plastica desatendida \n 2010 vs 2019')
         canvas = FigureCanvasTkAgg(fig, master=frame1)
         canvas.draw()
-        canvas.get_tk_widget().pack()
+        canvas.get_tk_widget().pack(fill="both")
 
         frame2 = tk.LabelFrame(self, frame_styles, text="Analisis de Basura per Capita")
         frame2.place(rely=0.1, relx=0.52, height=500, width=450)
@@ -506,7 +519,7 @@ class years(GUI):
         plt.title('Promedio de Basura de Plastico Desatendida per capita \n 2010 vs 2019')
         canvas = FigureCanvasTkAgg(fig, master=frame2)
         canvas.draw()
-        canvas.get_tk_widget().pack()
+        canvas.get_tk_widget().pack(fill="both")
 
 
 class PageTwo(GUI):
@@ -555,10 +568,12 @@ class Map2010(GUI):
 
         label1 = tk.Label(self.main_frame, font=("Verdana", 20), bg="grey", text=" Mapa 2010")
         label1.pack(side="top")
-        frame1 = tk.LabelFrame(self, frame_styles, text="Mapa creado con Plotly express")
-        frame1.place(rely=0.1, relx=0.05, height=500, width=450)
 '''
-        label = Label(frame1, image=ImageTk.PhotoImage(Image.open("2010.png")))
+        frame1 = tk.LabelFrame(self, frame_styles, text="Mapa creado con Plotly express")
+        frame1.place(rely=0.1, relx=0.05, height=500, width=900)
+        FrameWeb = HTMLLabel(frame1, html='<img src ="botellas.png">')
+        FrameWeb.pack(fill="both")
+        label = Label(frame1, image=ImageTk.PhotoImage(Image.open("diez.png")))
         label.pack()'''
 
 
@@ -569,21 +584,54 @@ class Map2019(GUI):
         label1 = tk.Label(self.main_frame, font=("Verdana", 20), bg="grey", text="Mapa 2019")
         label1.pack(side="top")
         frame7 = tk.LabelFrame(self, frame_styles, text="Mapa creado con Plotly express")
-        frame7.place(rely=0.1, relx=0.05, height=500, width=450)
+        frame7.place(rely=0.1, relx=0.05, height=500, width=900)
+        frame = Frame(frame7, width=600, height=400)
+        photo = ImageTk.PhotoImage(Image.open("botellas.png"))
+        vlabel = tk.Label(self, text="", image=photo)
+        vlabel.image = photo
+        vlabel.place(x=-1, y=-5, relwidth=1, relheight=1)
 
-class PageTwo(GUI):
+
+class Promedio(GUI):
     def __init__(self, parent, controller):
         GUI.__init__(self, parent)
 
-        label1 = tk.Label(self.main_frame, font=("Verdana", 20), text="Page Two")
+        label1 = tk.Label(self.main_frame, font=("Verdana", 20), text="Analisis por promedio", bg="grey")
         label1.pack(side="top")
+        frame_Prom = tk.LabelFrame(self, frame_styles, text="Promedio")
+        frame_Prom.place(rely=0.1, relx=0.05, height=500, width=900)
+        WPW = 'mismanaged_plasticwaste.csv'
+        datos = pd.read_csv(WPW)
+        datos['Promedio(millionT)'] = ((datos['Total_MismanagedPlasticWaste_2010 (millionT)'] + datos['Total_MismanagedPlasticWaste_2019 (millionT)']) / 2).astype(float)
+        datos['MissMAnaged Prom'] = ((datos['Mismanaged_PlasticWaste_PerCapita_2010 (kg per year) '] + datos['Mismanaged_PlasticWaste_PerCapita_2010 (kg per year) ']) / 2).astype(float)
+        datos.sort_values(["Promedio(millionT)"],
+                          axis=0,
+                          ascending=[False],
+                          inplace=True)
+        x1 = datos["MissMAnaged Prom"].head(15)
+        y1 = datos['Promedio(millionT)'].head(15)
+        county = datos["Country"].head(15)
+        figura = plt.figure()
+        sns.scatterplot(x=x1, y=county, data=datos, size=y1, palette="deep")
+        sns.set_style("darkgrid")
+        plt.xlabel("Año")
+        plt.ylabel("\nPromedio de Basura", labelpad=0)
+        plt.title('Promedio de Basura de Plastico Desatendida per capita \n 2010 vs 2019')
+        canvas = FigureCanvasTkAgg(figura, master=frame_Prom)
+        canvas.draw()
+        canvas.get_tk_widget().pack(fill="both")
 
 
 # se crea el login
 top = LoginPage()
+# se le adjunta un titulo
 top.title("Proyecto de POO")
+# se crea el obejo Raiz con MyAPP()
 root = MyApp()
+# esconde el objeto de la pantalla hasta que se le llame
 root.withdraw()
+# se le adjunta un titulo
 root.title("Concientización del plástico en el mundo")
 
+# llama al main loop de tk para que corra
 root.mainloop()
