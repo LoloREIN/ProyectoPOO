@@ -324,20 +324,31 @@ class MyApp(tk.Tk):
 
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-
+        # se crea un main frame
         main_frame = tk.Frame(self, bg="#84CEEB", height=600, width=1024)
+        # Determina con un booleano si la informacion geometrica de los componentes determinara el tamaño de la Frame
+        # False = no
         main_frame.pack_propagate(0)
+        # El main frame va a llenar nuestra MyApp
         main_frame.pack(fill="both", expand="true")
+        # el blue print de la Frame para anexar elementos
         main_frame.grid_rowconfigure(0, weight=1)
+        # el blue print de la Frame para anexar elementos
         main_frame.grid_columnconfigure(0, weight=1)
+        # crea una propiedad que se llama frames en la que se guardarán las paginas de nuestra APP
         self.frames = {}
+        # las paginas de nuestra app
         pages = (Paises, years, Promedio, Map2010, Map2019)
+        # Por cada elemnteo de pages, se crea una frame, se le da la caracteristica y se le da la caractesitica de frame
         for F in pages:
             frame = F(main_frame, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
+        # Mostrar el Frame de paises como primera frame
         self.show_frame(Paises)
+        # crea el menubar con la clase declarada anteriormente
         menubar = MenuBar(self)
+        # se agrega el menu a nuestra ventana de MyAPP
         tk.Tk.config(self, menu=menubar)
 
     # funcion que recibe el nombre de la "frame" a invocar
@@ -347,17 +358,16 @@ class MyApp(tk.Tk):
         # tkraise lleva el frame a primer plano
         frame.tkraise()
 
-
     # Funcion que destruye al elemento/objeto del que se invoca
     def Quit(self):
         self.destroy()
 
 
+# Clase GUI(Graphic User Interface) la cual hereda la clase frame de Tkinter
 class GUI(tk.Frame):
     def __init__(self, parent):
         tk.Frame.__init__(self, parent)
         self.main_frame = tk.Frame(self, bg="grey", height=600, width=1024)
-        # self.main_frame.pack_propagate(0)
         self.main_frame.pack(fill="both", expand="true")
         self.main_frame.grid_rowconfigure(0, weight=1)
         self.main_frame.grid_columnconfigure(0, weight=1)
