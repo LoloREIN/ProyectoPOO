@@ -568,25 +568,20 @@ class Map2010(GUI):
 
         frame1 = tk.LabelFrame(self, frame_styles, text="Mapa creado con Plotly express")
         frame1.place(rely=0.1, relx=0.05, height=500, width=450)
-        img = Image.open('2010.png')
+        '''img = Image.open('2010.png')
         tkimage = ImageTk.PhotoImage(img)
         lbl = tk.Label(frame1, image=tkimage)
         lbl.place(x=1, y=1)
         #label1.pack(fill="both")
-
+'''
 class Map2019(GUI):
     def __init__(self, parent, controller):
         GUI.__init__(self, parent)
 
         label1 = tk.Label(self.main_frame, font=("Verdana", 20), bg="grey", text="Mapa 2019")
         label1.pack(side="top")
-        frame1 = tk.LabelFrame(self, frame_styles, text="Mapa creado con Plotly express")
-        frame1.place(rely=0.1, relx=0.05, height=500, width=450)
-        img = Image.open('2019.png')
-        tkimage = ImageTk.PhotoImage(img)
-        lbl = tk.Label(frame1, image=tkimage)
-        lbl.place(x=1, y=1)
-
+        frame7 = tk.LabelFrame(self, frame_styles, text="Mapa creado con Plotly express")
+        frame7.place(rely=0.1, relx=0.05, height=500, width=450)
 
 class PageTwo(GUI):
     def __init__(self, parent, controller):
@@ -615,7 +610,7 @@ class OpenNewWindow(tk.Tk):
         label1 = tk.Label(frame1, font=("Verdana", 20), text="OpenNewWindow Page")
         label1.pack(side="top")
 
-
+# se crea el login
 top = LoginPage()
 top.title("Proyecto de POO")
 root = MyApp()
