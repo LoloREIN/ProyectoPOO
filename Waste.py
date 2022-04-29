@@ -9,13 +9,6 @@ for dirname, _, filenames in os.walk('mismanaged_plasticwaste.csv'):
     for filename in filenames:
         print(os.path.join(dirname, filename))
 df = pd.read_csv('mismanaged_plasticwaste.csv')
-print(df.head())
-print(df.info())
-df['Country'].unique()
-df['Country'].value_counts()
-df['Country'].nunique()
-df.describe()
-
 
 mapuno = px.choropleth(data_frame=df,
               locations = "Country",
