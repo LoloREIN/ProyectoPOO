@@ -557,9 +557,9 @@ class Map2010(GUI):
         label1.pack(side="top")
         frame1 = tk.LabelFrame(self, frame_styles, text="Mapa creado con Plotly express")
         frame1.place(rely=0.1, relx=0.05, height=500, width=450)
-
+'''
         label = Label(frame1, image=ImageTk.PhotoImage(Image.open("2010.png")))
-        label.pack()
+        label.pack()'''
 
 
 class Map2019(GUI):
