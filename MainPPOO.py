@@ -497,28 +497,33 @@ class Paises(GUI):
 
         Load_data()
 
-
+# Ventana que hereda de Gui
 class years(GUI):
 
     def __init__(self, parent, controller):
         GUI.__init__(self, parent)
-
+        # lectura de Datos
         df = pd.read_csv('mismanaged_plasticwaste.csv')
+        # parte estetica de la pagina y divisiones
         label1 = tk.Label(self.main_frame, bg="grey", font=("Verdana", 20), text="Analisis por años")
         label1.pack(side="top")
         frame1 = tk.LabelFrame(self, frame_styles, text="Analisis de basura total")
         frame1.place(rely=0.1, relx=0.05, height=500, width=450)
-
+        # datos de lo ejes
         x1 = df['Total_MismanagedPlasticWaste_2010 (millionT)'].sum()
         x2 = df['Total_MismanagedPlasticWaste_2019 (millionT)'].sum()
         x = ['2010', '2019']
         height = [x1, x2]
+        # tamaño y estilo de la grafica
         fig = plt.figure(figsize=(10, 7))
         sns.set_style("darkgrid")
+        # tipo de grafica
         sns.barplot(x=x, y=height)
+        # Parte de texto de la grafica
         plt.xlabel("Año")
         plt.ylabel("Total de Basura no Gestionada")
         plt.title('Total de basura Plastica desatendida \n 2010 vs 2019')
+        # colocacion de la pagina
         canvas = FigureCanvasTkAgg(fig, master=frame1)
         canvas.draw()
         canvas.get_tk_widget().pack(fill="both")
@@ -531,19 +536,23 @@ class years(GUI):
                                       </p>\
                                           </div>")
         FrameWeb.pack(fill="both", side = "bottom")
-
+        # parte estetica de la segunda parte de la ventana
         frame2 = tk.LabelFrame(self, frame_styles, text="Analisis de Basura per Capita")
         frame2.place(rely=0.1, relx=0.52, height=500, width=450)
+        # DAtos de la grafica
         v1 = df.iloc[:, 3].sum()
         v2 = df.iloc[:, 4].sum()
         x = ['2010', '2019']
         height = [v1, v2]
+        # estilo tipo y tamaño de la grafica
         fig = plt.figure(figsize=(11, 7))
         sns.set_style("darkgrid")
         sns.barplot(x=x, y=height)
+        # parte de Texto de la graficaa
         plt.xlabel("Año")
         plt.ylabel("\nPromedio de Basura", labelpad=0)
         plt.title('Promedio de Basura de Plastico Desatendida per capita \n 2010 vs 2019')
+        # colocacion de la pagina
         canvas = FigureCanvasTkAgg(fig, master=frame2)
         canvas.draw()
         canvas.get_tk_widget().pack(fill="both")
@@ -567,15 +576,19 @@ class Map2010(GUI):
         frame1 = tk.LabelFrame(self, frame_styles, text="Mapa creado con Plotly express")
         frame1.place(rely=0.1, relx=0.05, height=500, width=900)
         # display de HTML Para intentar poner la imagen
-        FrameWeb = HTMLLabel(frame1, html='<a href="Mapa2010"></a>\
-                                          <h3>Grafica de Basura total per capita(promedio)</h3>\
-                                              <p>En esta grafica se ve el total de basura sumada de cada pais por año\
+        FrameWeb = HTMLLabel(frame1, html='<a href="Mapa2010">Ver el mapa en una pagina Web</a><br>\
+                                          <h3>Mapa de la basura en el mundo </h3>\
+                                              <p>En esta seccion se presenta  un mapa de color de acuerdo con la cantidad basura total que hubo en el año 2010\
                                               </p>\
                                                   </div>')
         FrameWeb.pack(fill="both")
-'''        label = Label(frame1, image=ImageTk.PhotoImage(Image.open("diez.png")))
+
+'''     INSERTAR LA IMAGEN DIRECTAMENTE EN EL LABEL   
+        label = Label(frame1, image=ImageTk.PhotoImage(Image.open("diez.png")))
         label.pack()'''
-'''     mapuno = px.choropleth(data_frame=df,
+'''     
+        Codigo el mapa uo
+        mapuno = px.choropleth(data_frame=df,
                                locations="Country",
                                locationmode='country names',
                                color="Total_MismanagedPlasticWaste_2010 (millionT)",
@@ -599,21 +612,22 @@ class Map2019(GUI):
         label1.pack(side="top")
         frame7 = tk.LabelFrame(self, frame_styles, text="Mapa creado con Plotly express")
         frame7.place(rely=0.1, relx=0.05, height=500, width=900)
-        FrameWeb = HTMLLabel(frame7, html='<a href="Mapa2019"></a>\
-                                                  <h3>Grafica de Basura total per capita(promedio)</h3>\
-                                                      <p>En esta grafica se ve el total de basura sumada de cada pais por año\
-                                                      </p>\
-                                                          </div>')
+        FrameWeb = HTMLLabel(frame7, html='<a href="Mapa2019">Ver el mapa en una pagina web</a><br>\
+                                                  <h3>Mapa de la basura en el mundo </h3>\
+                                              <p>En esta seccion se presenta  un mapa de color de acuerdo con la cantidad basura total que hubo en el año 2019\
+                                              </p>\
+                                                  </div>')
         FrameWeb.pack(fill="both")
 
 
-'''     photo = ImageTk.PhotoImage(Image.open("botellas.png"))
+'''     INTENTO POR FOTO
+        photo = ImageTk.PhotoImage(Image.open("botellas.png"))
         vlabel = tk.Label(self, text="", image=photo)
         vlabel.image = photo
         vlabel.place(x=-1, y=-5, relwidth=1, relheight=1)
 '''
 '''
-
+        Codigo del mapa 2
         mapdos = px.choropleth(data_frame=df,
                        locations="Country",
                        locationmode='country names',
