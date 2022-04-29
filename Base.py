@@ -165,7 +165,7 @@ class MenuBar(tk.Menu):
         self.add_cascade(label="Menu1", menu=menu_file)
         menu_file.add_command(label="All Widgets", command=lambda: parent.show_frame(Some_Widgets))
         menu_file.add_separator()
-        menu_file.add_command(label="Exit Application", command=lambda: parent.Quit_application())
+        menu_file.add_command(label="Exit Application", command=lambda: parent.Quit())
 
         menu_orders = tk.Menu(self, tearoff=0)
         self.add_cascade(label="Menu2", menu=menu_orders)

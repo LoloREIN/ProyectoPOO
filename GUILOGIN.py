@@ -3,7 +3,7 @@ POO- Proyecto de periodo
 Concientización del plástico en el mundo
 Miembros del Equipo
 ID          Nombre                      Carrera
-0243040     Diego Chipolini Pérez       LMEC
+0243040     Diego Chipolini Pérez       LMECC
 0243054     Lorena Martínez Loera       LIGIC
 0212511     Lorenzo Reinoso Fuentes     LIDCI
 
@@ -22,6 +22,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
 import os
+import dash
+
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,
                                                NavigationToolbar2Tk)
@@ -44,6 +46,9 @@ grid y place son muy similares la diferencia es que
     place necesita parametros por relacion o poscion exacta
     Grid se divide el "padre" en columnas y filas, con base a eso coloca el objeto
     Pack es para colocar el objeto completamente sobre el "padre"
+    
+Lamba expresions: 
+similares a los metodos, pero no requieren nombre, y se pueden usar de manera inmediata en el cuerpo de un metodo 
 '''
 
 
@@ -61,7 +66,7 @@ class LoginPage(tk.Tk):
         # Codigo para poner la imagen de fondo
         image1 = Image.open("botellas.png")
         test = ImageTk.PhotoImage(image1)
-        label1 = tk.Label(main_frame,image=test)
+        label1 = tk.Label(main_frame, image=test)
         label1.image = test
         label1.pack(fill="both")
 
@@ -89,11 +94,11 @@ class LoginPage(tk.Tk):
         # espacio para la contraseña show cambia los carácteres a *
         entry_pw = ttk.Entry(frame_login, width=30, cursor="xterm", show="*")
         entry_pw.grid(row=2, column=1)
-        # creación de un boton para hacer el login (invoca la funcion getlogin())
+        # creación de un boton para hacer el login (con getlogin())
         # el lambda crea funciones anonimas
         button = ttk.Button(frame_login, text="Login", command=lambda: getlogin())
         button.place(rely=0.70, relx=0.51)
-        # creación de un boton para hacer el registro de un nuevo usuario (invoca la funcion signup())
+        # creación de un boton para hacer el registro de un nuevo usuario (con signup())
         # el lambda crea funciones anonimas
         signup_btn = ttk.Button(frame_login, text="Registro", command=lambda: get_signup())
         signup_btn.place(rely=0.70, relx=0.73)
@@ -109,7 +114,7 @@ class LoginPage(tk.Tk):
             # toma el valor de el Entry de la contraseña
             password = entry_pw.get()
             # usa la funcion validación la cual retorna Verdadero o Falso
-            #validation = validate(username, password)
+            # validation = validate(username, password)
             validation = True
             # si la validación es verdadera
             if validation:
@@ -135,7 +140,7 @@ class LoginPage(tk.Tk):
                         # si el usuario coincide revisa que la contraseña coincida
                         # *con los parametros de la funcion
                         if line[1] == username and line[3] == password:
-                            #si en algun momento se cumplem ambas condiciones la validacion se vuelve verdadera
+                            # si en algun momento se cumplem ambas condiciones la validacion se vuelve verdadera
                             return True
                     return False
             # si no encuentra el archivo de credenciales esto indica que no haz creado ningun usuario
@@ -163,82 +168,145 @@ class Registro(tk.Tk):
         self.geometry("250x100")
         # evita que la ventana cambie de tamaño
         self.resizable(0, 0)
-        #le da de titulo registro
+        # le da de titulo registro
         self.title("Registro")
-        #es el estilo de texto, color, tamaño tipografia etc
+        # es el estilo de texto, color, tamaño tipografia etc
         text_styles = {"font": ("Verdana", 10),
                        "background": "grey",
                        "foreground": "#E1FFFF"}
         # se crea el label de usuario
         label_user = tk.Label(main_frame, text_styles, text="Nuevo Ususario:")
-        # se le da su posicion en frame
+        # se le da la Posición al label en el main frame
         label_user.grid(row=1, column=0)
         # se crea el label de contraseña
         label_pw = tk.Label(main_frame, text_styles, text="Contraseña:")
-        # se crea el label de contraseña
+        # se le da la Posición al label en el main frame
         label_pw.grid(row=2, column=0)
-
-        entry_user = ttk.Entry(main_frame, width=20, cursor="xterm")
+        # se crea un Entry para el usuario
+        entry_user = ttk.Entry(main_frame, width=15, cursor="xterm")
+        # se le da la Posición al Entry en el main frame
         entry_user.grid(row=1, column=1)
-
-        entry_pw = ttk.Entry(main_frame, width=20, cursor="xterm", show="*")
+        # se crea un Entry para la contraseña
+        entry_pw = ttk.Entry(main_frame, width=15, cursor="xterm", show="*")
+        # se le da la Posición al Entry en el main frame
         entry_pw.grid(row=2, column=1)
-
+        # se crea un boton con el que se puede hacer el registro con signup()
         button = ttk.Button(main_frame, text="Crear Cuenta", command=lambda: signup())
+        # se le da la Posición al Botón en el main frame
         button.grid(row=4, column=1)
 
+        # declara la función signup
         def signup():
             # Creates a text file with the Username and password
+            # toma el usuario del Entry de usuario
             user = entry_user.get()
+            # toma la contraseña del Entry de Contraseña
             pw = entry_pw.get()
+            # invoca la funcion validar Usuario con el parametro usuario
             validation = validate_user(user)
+            # si la validacion es Falsa(el usuario ya exite)
             if not validation:
+                # Despliega un pop up message que dice "El usuario ya existe"
                 tk.messagebox.showerror("Atención", "El usuario ya existe")
+            # Si la validacion es Verdadera
             else:
-                if len(pw) > 4:
-                    credentials = open("credentials.txt", "a")
+                # lista de los carateres especiales
+                SpecialSym = ['$', '@', '#', '%']
+                # Creacion de parametros para una contraseña segura
+                # incializada en True, y si no cumple algún parámetro se vuelve falso
+                val = True
+                # si la contraseña tiene menos de 7 caracteres-> No segura
+                if len(pw) < 7:
+                    tk.messagebox.showerror("Atención", 'La contraseña debe de tener por lo menos 7 caracteres')
+                    val = False
+                # si la contraseña tiene mas de 20 caracteres-> segura, pero ineficiente
+                if len(pw) > 20:
+                    tk.messagebox.showerror("Atención", 'La contraseña no puede tener mas de 20 caracteres')
+                    val = False
+                # si la contraseña no tiene numero o numeros-> No segura
+                if not any(char.isdigit() for char in pw):
+                    tk.messagebox.showerror("Atención", 'La contraseña debe de tener por lo menos un número')
+                    val = False
+                # si la contraseña no tiene mayuscula-> No segura
+                if not any(char.isupper() for char in pw):
+                    tk.messagebox.showerror("Atención", 'La contraseña debe de tener por lo menos una Mayúscula')
+                    val = False
+                # si la contraseña no tiene minuscula-> No segura
+                if not any(char.islower() for char in pw):
+                    tk.messagebox.showerror("Atención", 'La contraseña debe de tenr por lo menos una minúscula')
+                    val = False
+                # si la contraseña no tiene caracter especial-> No segura
+                if not any(char in SpecialSym for char in pw):
+                    tk.messagebox.showerror("Atención", 'Password should have at least one of the symbols $@#')
+                    val = False
+                # si cumple todos los parametros entonces
+                if val:
+                    # se abre el archi de las credenciales, y se usa *Apend Text* para no sobre escribir el archivo
+                    credentials = open("credentials.txt", "at")
+                    # escribirá Usuario, el usuario, Password, la contraseña y se pasará al siguiente renglon
                     credentials.write(f"Username,{user},Password,{pw},\n")
+                    # se cierra el archivo
                     credentials.close()
+                    # pop up message avisandole al usuario que se guardaron sus datos
                     tk.messagebox.showinfo("Atención", "Los detalles de la cuenta se han guardado")
+                    # se cierra la ventana de registro
                     Registro.destroy(self)
-
+                # si no se cumple la contraseña segura
                 else:
-                    tk.messagebox.showerror("Atención", "La contraseña necesita mas de 4 caracteres")
+                    # pop up message avisandole al usuario que no se guardaron sus datos
+                    tk.messagebox.showerror("Atención", "Su registro no se completo")
 
+        # funcion para validar el usuario y que no se repita
         def validate_user(username):
-            # Checks the text file for a username/password combination.
             try:
+                # con el archivo abierto, leera el contendio del archivo
                 with open("credentials.txt", "r") as credentials:
+                    # en cada linea del archivo
                     for line in credentials:
+                        # separá cada coma
                         line = line.split(",")
+                        # en el segundo espacio de la linea que es el "Username" va a ver si existe
                         if line[1] == username:
+                            # si existe la validacion es Falsa(ya exite el usuario)
                             return False
+                # si termina el ciclo y no fue Falso entonces el usuario no exite y devuelve True
                 return True
+            # si el archivo no existe lo interpreta como que es el primer usuario y devuelve true
             except FileNotFoundError:
                 return True
 
 
+# crea una nueva clase que hereda las caracteristicas de menu de Tkinter
 class MenuBar(tk.Menu):
+    # se inicializa el menu
     def __init__(self, parent):
         tk.Menu.__init__(self, parent)
-
+        # se crea el menu, el tearoff es para que no nos salga un elemento vacio por defecto
         menu_file = tk.Menu(self, tearoff=0)
-        self.add_cascade(label="Menu1", menu=menu_file)
-        menu_file.add_command(label="All Widgets", command=lambda: parent.show_frame(Some_Widgets))
+        # se crea una "cascada"/elemntos deplegados en el primer espacio con el nombre main,
+        self.add_cascade(label="Main", menu=menu_file)
+        # se agrega un elemento a la cascada llamado Paises, el cual al ser seleccionado,
+        # invoca la funcion Show frame con "paises" como parametro
+        menu_file.add_command(label="Paises", command=lambda: parent.show_frame(Paises))
+        # se añade una linea separadora
         menu_file.add_separator()
-        menu_file.add_command(label="Exit Application", command=lambda: parent.Quit_application())
-
-        menu_pricing = tk.Menu(self, tearoff=0)
-        self.add_cascade(label="Menu2", menu=menu_pricing)
-        menu_pricing.add_command(label="Page One", command=lambda: parent.show_frame(PageOne))
+        # se agrega un elemento a la cascada llamado Salir, el cual al ser seleccionado,
+        # invoca la funcion Quit
+        menu_file.add_command(label="Salir", command=lambda: parent.Quit())
+        # se crea otro menu, el tearoff es para que no nos salga un elemento vacio por defecto
+        YearComparison = tk.Menu(self, tearoff=0)
+        # se crea una "cascada"/elemntos deplegados en el primer espacio con el nombre Barplot,
+        self.add_cascade(label="Barplot", menu=YearComparison)
+        # invoca la funcion Show frame con "years" como parametro
+        YearComparison.add_command(label="Años", command=lambda: parent.show_frame(years))
 
         menu_operations = tk.Menu(self, tearoff=0)
         self.add_cascade(label="Menu3", menu=menu_operations)
         menu_operations.add_command(label="Page Two", command=lambda: parent.show_frame(PageTwo))
         menu_positions = tk.Menu(menu_operations, tearoff=0)
-        menu_operations.add_cascade(label="Menu4", menu=menu_positions)
-        menu_positions.add_command(label="Page Three", command=lambda: parent.show_frame(PageThree))
-        menu_positions.add_command(label="Page Four", command=lambda: parent.show_frame(PageFour))
+        menu_operations.add_cascade(label="Mapas", menu=menu_positions)
+        menu_positions.add_command(label="2010", command=lambda: parent.show_frame(Map2010))
+        menu_positions.add_command(label="2019", command=lambda: parent.show_frame(Map2019))
 
         menu_help = tk.Menu(self, tearoff=0)
         self.add_cascade(label="Menu5", menu=menu_help)
@@ -248,7 +316,6 @@ class MenuBar(tk.Menu):
 class MyApp(tk.Tk):
 
     def __init__(self, *args, **kwargs):
-
         tk.Tk.__init__(self, *args, **kwargs)
         main_frame = tk.Frame(self, bg="#84CEEB", height=600, width=1024)
         main_frame.pack_propagate(0)
@@ -258,23 +325,27 @@ class MyApp(tk.Tk):
         # self.resizable(0, 0) prevents the app from being resized
         # self.geometry("1024x600") fixes the applications size
         self.frames = {}
-        pages = (Some_Widgets, PageOne, PageTwo, PageThree, PageFour)
+        pages = (Paises, years, PageTwo, Map2010, Map2019)
         for F in pages:
             frame = F(main_frame, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
-        self.show_frame(Some_Widgets)
+        self.show_frame(Paises)
         menubar = MenuBar(self)
         tk.Tk.config(self, menu=menubar)
 
+    # funcion que recibe el nombre de la "frame" a invocar
     def show_frame(self, name):
+        # el frame se va a identificar como frame y el nombre
         frame = self.frames[name]
+        # tkraise lleva el frame a primer plano
         frame.tkraise()
 
     def OpenNewWindow(self):
         OpenNewWindow()
 
-    def Quit_application(self):
+    # Funcion que destruye al elemento/objeto del que se invoca
+    def Quit(self):
         self.destroy()
 
 
@@ -288,7 +359,7 @@ class GUI(tk.Frame):
         self.main_frame.grid_columnconfigure(0, weight=1)
 
 
-class Some_Widgets(GUI):  # inherits from the GUI class
+class Paises(GUI):  # inherits from the GUI class
     def __init__(self, parent, controller):
         GUI.__init__(self, parent)
 
@@ -400,37 +471,121 @@ class Some_Widgets(GUI):  # inherits from the GUI class
                 WWW_list[i].append(Flag_List[i])
             for row in WWW_list:
                 tv1.insert("", "end", values=row)
+
         Load_data()
 
 
-class PageOne(GUI):
+class years(GUI):
+
     def __init__(self, parent, controller):
         GUI.__init__(self, parent)
 
-        label1 = tk.Label(self.main_frame, font=("Verdana", 20), text="Page One")
+        df = pd.read_csv('mismanaged_plasticwaste.csv')
+        label1 = tk.Label(self.main_frame, bg="grey", font=("Verdana", 20), text="Analisis por años")
         label1.pack(side="top")
+        frame1 = tk.LabelFrame(self, frame_styles, text="Analisis de basura total")
+        frame1.place(rely=0.1, relx=0.05, height=500, width=450)
+
+        x1 = df['Total_MismanagedPlasticWaste_2010 (millionT)'].sum()
+        x2 = df['Total_MismanagedPlasticWaste_2019 (millionT)'].sum()
+        x = ['2010', '2019']
+        height = [x1, x2]
+        fig = plt.figure(figsize=(10, 7))
+        sns.set_style("darkgrid")
+        sns.barplot(x=x, y=height)
+        plt.xlabel("Año")
+        plt.ylabel("Total de Basura no Gestionada")
+        plt.title('Total de basura Plastica desatendida \n 2010 vs 2019')
+        canvas = FigureCanvasTkAgg(fig, master=frame1)
+        canvas.draw()
+        canvas.get_tk_widget().pack()
+
+        frame2 = tk.LabelFrame(self, frame_styles, text="Analisis de Basura per Capita")
+        frame2.place(rely=0.1, relx=0.52, height=500, width=450)
+        # df['Promedio2010'] = (df['Total_MismanagedPlasticWaste_2010 (millionT)'].sum()/ df['Total_MismanagedPlasticWaste_2010 (millionT)'].len()).astype(float)
+        # df['Promedio2010'] = (df['Total_MismanagedPlasticWaste_2019 (millionT)'].sum()/ df['Total_MismanagedPlasticWaste_2019 (millionT)'].len()).astype(float)
+        v1 = df.iloc[:, 3].sum()
+        v2 = df.iloc[:, 4].sum()
+        x = ['2010', '2019']
+        height = [v1, v2]
+        fig = plt.figure(figsize=(11, 7))
+        sns.set_style("darkgrid")
+        sns.barplot(x=x, y=height)
+        plt.xlabel("Año")
+        plt.ylabel("\nPromedio de Basura", labelpad=0)
+        plt.title('Promedio de Basura de Plastico Desatendida per capita \n 2010 vs 2019')
+        canvas = FigureCanvasTkAgg(fig, master=frame2)
+        canvas.draw()
+        canvas.get_tk_widget().pack()
+
 
 class PageTwo(GUI):
     def __init__(self, parent, controller):
         GUI.__init__(self, parent)
-
-        label1 = tk.Label(self.main_frame, font=("Verdana", 20), text="Page Two")
+        df = pd.read_csv('mismanaged_plasticwaste.csv')
+        label1 = tk.Label(self.main_frame, bg="grey", font=("Verdana", 20), text="Analisis por años")
         label1.pack(side="top")
+        frame1 = tk.LabelFrame(self, frame_styles, text="Analisis de basura total")
+        frame1.place(rely=0.1, relx=0.05, height=500, width=450)
+        frame2 = tk.LabelFrame(self, frame_styles, text="Analisis de Basura per Capita")
+        frame2.place(rely=0.1, relx=0.52, height=500, width=450)
 
-class PageThree(GUI):
+        '''mapuno = px.choropleth(data_frame=df,
+                               locations="Country",
+                               locationmode='country names',
+                               color="Total_MismanagedPlasticWaste_2010 (millionT)",
+                               color_continuous_scale='Viridis',
+                               width=1000,
+                               height=500,
+                               title="Mismanaged plastic waste for each country in 2010"
+                               )
+        # open in website
+        app = dash.Dash()
+        app.layout = html.Div([
+            dcc.Graph(figure= mapuno)
+        ])
+
+        mapdos = px.choropleth(data_frame=df,
+                               locations="Country",
+                               locationmode='country names',
+                               color="Total_MismanagedPlasticWaste_2019 (millionT)",
+                               color_continuous_scale='Viridis',
+                               width=1000,
+                               height=500,
+                               title="Mismanaged plastic waste for each country in 2019"
+                               )
+
+
+        app.run_server(debug=True, use_reloader=False)'''
+
+
+class Map2010(GUI):
     def __init__(self, parent, controller):
         GUI.__init__(self, parent)
 
-        label1 = tk.Label(self.main_frame, font=("Verdana", 20), text="Page Three")
+        label1 = tk.Label(self.main_frame, font=("Verdana", 20), bg="grey", text=" Mapa 2010")
         label1.pack(side="top")
 
+        frame1 = tk.LabelFrame(self, frame_styles, text="Mapa creado con Plotly express")
+        frame1.place(rely=0.1, relx=0.05, height=500, width=450)
+        img = Image.open('2010.png')
+        tkimage = ImageTk.PhotoImage(img)
+        lbl = tk.Label(frame1, image=tkimage)
+        lbl.place(x=1, y=1)
+        #label1.pack(fill="both")
 
-class PageFour(GUI):
+class Map2019(GUI):
     def __init__(self, parent, controller):
         GUI.__init__(self, parent)
 
-        label1 = tk.Label(self.main_frame, font=("Verdana", 20), text="Page Four")
+        label1 = tk.Label(self.main_frame, font=("Verdana", 20), bg="grey", text="Mapa 2019")
         label1.pack(side="top")
+        frame1 = tk.LabelFrame(self, frame_styles, text="Mapa creado con Plotly express")
+        frame1.place(rely=0.1, relx=0.05, height=500, width=450)
+        img = Image.open('2019.png')
+        tkimage = ImageTk.PhotoImage(img)
+        lbl = tk.Label(frame1, image=tkimage)
+        lbl.place(x=1, y=1)
 
 
 class PageTwo(GUI):
@@ -443,7 +598,6 @@ class PageTwo(GUI):
 
 class OpenNewWindow(tk.Tk):
     def __init__(self, *args, **kwargs):
-
         tk.Tk.__init__(self, *args, **kwargs)
 
         main_frame = tk.Frame(self)
