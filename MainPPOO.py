@@ -20,7 +20,6 @@ from PIL import ImageTk, Image
 import matplotlib.pyplot as plt
 import seaborn as sns
 from tkhtmlview import HTMLLabel
-import plotly.express as px
 import dash
 
 
@@ -381,10 +380,10 @@ class GUI(tk.Frame):
 class Paises(GUI):
     def __init__(self, parent, controller):
         GUI.__init__(self, parent)
-
+        # Frames
         frame1 = tk.LabelFrame(self, frame_styles, text="Lista de los Paises")
         frame1.place(rely=0.05, relx=0.02, height=500, width=400)
-
+        # datos exportados del csv
         dataFile = pd.read_csv('mismanaged_plasticwasteG.csv')
 
         frame2 = tk.LabelFrame(self, frame_styles, text="Graficas por País")
@@ -392,11 +391,12 @@ class Paises(GUI):
         mylabel = Label(frame2, text="Elige un País",
                         font=("Helvetica", 14),bg = "grey", fg="light blue")
         mylabel.pack(pady=10)
+        #lista de paises
         countries = []
         countriesFile = dataFile['Country'].tolist()
         countries.append("--Pais--")
         countries.extend(countriesFile)
-
+        # Funcion Graficadora
         def plot(wasteList, perCapitaList):
             fig = Figure(figsize=(5, 5),
                          dpi=100)
@@ -449,7 +449,8 @@ class Paises(GUI):
         w = OptionMenu(frame2, variable, *choices, command=display_selected)
         w.pack(expand=True)
 
-        # This is a treeview.
+        # Treeview que es una vista jerárquica de información
+        # se visualisa como una lista
         tv1 = ttk.Treeview(frame1)
         column_list_account = ["Country", "country_code", "Flag"]
         tv1['columns'] = column_list_account
@@ -518,8 +519,11 @@ class years(GUI):
         canvas = FigureCanvasTkAgg(fig, master=frame1)
         canvas.draw()
         canvas.get_tk_widget().pack(fill="both")
-        FrameWeb = HTMLLabel(frame1, html="<h2><strong>Grafica de Basura total(Promedio)</strong></h2>\
-                                      <p>En esta grafica se ve el total de basura sumada de cada pais por año\
+        FrameWeb = HTMLLabel(frame1, html="<h2><b>Grafica de Basura total(Promedio)</b></h2>\
+                                      <p>En esta grafica se ve el total de basura sumada en el eje x<br>"
+                                        "En el eje y se encuentran los años(2010 y 2019)<br>"
+                                          "Esto nos hace darnos cuenta del gran problema de la basura ya que en solo dos"
+                                          " <b>años aumento el doble</b>\
                                       </p>\
                                           </div>")
         FrameWeb.pack(fill="both", side = "bottom")
@@ -539,22 +543,25 @@ class years(GUI):
         canvas = FigureCanvasTkAgg(fig, master=frame2)
         canvas.draw()
         canvas.get_tk_widget().pack(fill="both")
-        FrameWeb = HTMLLabel(frame2, html="<h3>Grafica de Basura total per capita(promedio)</h3>\
-                                              <p>En esta grafica se ve el total de basura sumada de cada pais por año\
-                                              </p>\
+        FrameWeb = HTMLLabel(frame2, html="<h3><b>Grafica de Basura total per capita(promedio)</b></h3>\
+                                              <p>En esta grafica se ve el total de basura per capita sumada en el eje x<br>"
+                                              "En el eje y se encuentran los años(2010 y 2019)<br>"
+                                          "Per Capita significa por individuo por lo que nos ayuda a tener un analisis y una aproximaxion mas realista por país<br>\
+                                            </p>\
                                                   </div>")
         FrameWeb.pack(fill="both", side="bottom")
 
-
+# Se crea la venta de Map2010 que hereda GUI
 class Map2010(GUI):
     def __init__(self, parent, controller):
         GUI.__init__(self, parent)
-
+        # display y configuracion estetica de la pagina
         label1 = tk.Label(self.main_frame, bg="grey", font=("Verdana", 20), text="Analisis por años")
         label1.pack(side="top")
 
         frame1 = tk.LabelFrame(self, frame_styles, text="Mapa creado con Plotly express")
         frame1.place(rely=0.1, relx=0.05, height=500, width=900)
+        # display de HTML Para intentar poner la imagen
         FrameWeb = HTMLLabel(frame1, html='<img src = "">\
                                           <h3>Grafica de Basura total per capita(promedio)</h3>\
                                               <p>En esta grafica se ve el total de basura sumada de cada pais por año\
@@ -578,11 +585,11 @@ class Map2010(GUI):
             dcc.Graph(figure= mapuno)
         ])'''
 
-
+# Se crea la venta de Map2019 que hereda GUI
 class Map2019(GUI):
     def __init__(self, parent, controller):
         GUI.__init__(self, parent)
-
+        # Creacion de los Frames
         label1 = tk.Label(self.main_frame, font=("Verdana", 20), bg="grey", text="Mapa 2019")
         label1.pack(side="top")
         frame7 = tk.LabelFrame(self, frame_styles, text="Mapa creado con Plotly express")
@@ -610,39 +617,52 @@ class Map2019(GUI):
 
 app.run_server(debug=True, use_reloader=False)'''
 
-
+# Se crea la ventana de Promedio
 class Promedio(GUI):
     def __init__(self, parent, controller):
         GUI.__init__(self, parent)
-
+        # se crea el Frame
         label1 = tk.Label(self.main_frame, font=("Verdana", 20), text="Analisis por promedio", bg="grey")
         label1.pack(side="top")
+        # Frame interior para dar dormato
         frame_Prom = tk.LabelFrame(self, frame_styles, text="Promedio")
         frame_Prom.place(rely=0.1, relx=0.05, height=500, width=900)
         WPW = 'mismanaged_plasticwaste.csv'
+        # se leen los datos
         datos = pd.read_csv(WPW)
+        # se crean dos columnas nuevas
         datos['Promedio(millionT)'] = ((datos['Total_MismanagedPlasticWaste_2010 (millionT)'] +
                                         datos['Total_MismanagedPlasticWaste_2019 (millionT)']) / 2).astype(float)
         datos['Prom PerCapita'] = ((datos['Mismanaged_PlasticWaste_PerCapita_2010 (kg per year) '] +
                                       datos['Mismanaged_PlasticWaste_PerCapita_2019 (kg per year) ']) / 2).astype(float)
+        # se acomodan los datos
         datos.sort_values(["Promedio(millionT)"],
                           axis=0,
                           ascending=[False],
                           inplace=True)
+        # se toman los pimeros valores de las listas
         x1 = datos["Prom PerCapita"].head(15)
         y1 = datos['Promedio(millionT)'].head(15)
         county = datos["Country"].head(15)
+        # se crea la figura
         figura = plt.figure()
+        # con seaborn se hace la scatterplot
         sns.scatterplot(x=y1, y=county, data=datos, size=x1, palette="deep")
+        # Estilo de la grafica
         sns.set_style("darkgrid")
         plt.xlabel("Promedio de basura(2010+2019)/2")
         plt.ylabel("Paises", labelpad=0)
         plt.title('Promedio de Basura de Plastico Desatendida')
+        # se crea el canvas de la figura y donde colocarlo
         canvas = FigureCanvasTkAgg(figura, master=frame_Prom)
         canvas.draw()
         canvas.get_tk_widget().pack(fill="both")
+        # frame de HTML para la la descripcion
         FrameWeb = HTMLLabel(frame_Prom, html="<h3>Promedio de Basura de Plastico Desatendida</h3>\
-                                                      <p>En esta grafica se ve el total de basura sumada de cada pais por año\
+                                                      <p>En el eje x de esta grafica se pueden apreciar los paises"
+                                                        "(solo salen los principales 15 paises con el criterio de que aparezcan solo los que mas basura tienen en promedio)<br>"
+                                                        "En el eje y aparece el Promedio entre 2010 y 2019 de contaminacion de los paises<br>"
+                                                        "Esta grafica se considera en 3D ya que el tamaño de los puntos(dado por el promedio perCapita) le da otra dimension\
                                                       </p>\
                                                           </div>")
         FrameWeb.pack(fill="both", side="bottom")
