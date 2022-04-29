@@ -380,7 +380,7 @@ class GUI(tk.Frame):
 class Paises(GUI):
     def __init__(self, parent, controller):
         GUI.__init__(self, parent)
-        # Frames
+        # Frames de
         frame1 = tk.LabelFrame(self, frame_styles, text="Lista de los Paises")
         frame1.place(rely=0.05, relx=0.02, height=500, width=400)
         # datos exportados del csv
@@ -397,18 +397,21 @@ class Paises(GUI):
         countries.append("--Pais--")
         countries.extend(countriesFile)
         # Funcion Graficadora
+
         def plot(wasteList, perCapitaList):
+            #tamaño de la figura
             fig = Figure(figsize=(5, 5),
                          dpi=100)
-
+            # Datos de las figuras
             x = [2010, 2019]
             y1 = wasteList
             y2 = perCapitaList
 
             plot1 = fig.add_subplot(111)
-
+            # Graficas
             plot1.plot(x, y1, marker='o', label="Total MismanagedPlastic Waste")
             plot1.plot(x, y2, marker='o', label="Mismanaged PlasticWaste PerCapita")
+
             plot1.legend()
             plot1.grid()
 
@@ -418,39 +421,39 @@ class Paises(GUI):
 
             canvas.get_tk_widget().pack()
 
-            toolbar = NavigationToolbar2Tk(canvas,
-                                           frame2)
-            toolbar.update()
-
-            canvas.get_tk_widget().pack()
-
+        # Funcion para desplegar la grafica del pais seleccionado
         def display_selected(choice):
+            # toma el parametro de la Variable que es un menu de opciones
             choice = variable.get()
+            # el indice del pais va a ser el indice de la eleccion del pais menos 1
             index = countries.index(choice) - 1
-            # print(dataFile.loc[index]['Total_MismanagedPlasticWaste_2010 (millionT)'])
+            # Lectura de Datos
             Waste_2010 = dataFile.loc[index]['Total_MismanagedPlasticWaste_2010 (millionT)']
             Waste_2019 = dataFile.loc[index]['Total_MismanagedPlasticWaste_2019 (millionT)']
             PerCapita_2010 = dataFile.loc[index]['Mismanaged_PlasticWaste_PerCapita_2010 (kg per year) ']
             PerCapita_2019 = dataFile.loc[index]['Mismanaged_PlasticWaste_PerCapita_2019 (kg per year) ']
-
+            # Union de DAtos
             wasteList = [Waste_2010, Waste_2019]
             perCapitaList = [PerCapita_2010, PerCapita_2019]
 
+            # regresa una lista de todos los widgets que están en frame
             data = frame2.pack_slaves()
-
+            # si hay mas de dos Widgets los elimina de manera que solo haya un menu y una gráfica al mismo tiempo
             if len(data) > 2:
                 data[2].destroy()
                 data[3].destroy()
+            # se invoca la function Plot con los Datos que se unieron previamente
             plot(wasteList, perCapitaList)
 
+        # Elemento de menu de opciones
         choices = countries
         variable = StringVar(frame2)
-        variable.set('Select a country')
+        variable.set('--Pais--')
         w = OptionMenu(frame2, variable, *choices, command=display_selected)
         w.pack(expand=True)
 
         # Treeview que es una vista jerárquica de información
-        # se visualisa como una lista
+        # se visualización como una lista
         tv1 = ttk.Treeview(frame1)
         column_list_account = ["Country", "country_code", "Flag"]
         tv1['columns'] = column_list_account
@@ -519,6 +522,7 @@ class years(GUI):
         canvas = FigureCanvasTkAgg(fig, master=frame1)
         canvas.draw()
         canvas.get_tk_widget().pack(fill="both")
+        # display de HTML para el texto
         FrameWeb = HTMLLabel(frame1, html="<h2><b>Grafica de Basura total(Promedio)</b></h2>\
                                       <p>En esta grafica se ve el total de basura sumada en el eje x<br>"
                                         "En el eje y se encuentran los años(2010 y 2019)<br>"
@@ -543,6 +547,7 @@ class years(GUI):
         canvas = FigureCanvasTkAgg(fig, master=frame2)
         canvas.draw()
         canvas.get_tk_widget().pack(fill="both")
+        # display de HTML para el texto
         FrameWeb = HTMLLabel(frame2, html="<h3><b>Grafica de Basura total per capita(promedio)</b></h3>\
                                               <p>En esta grafica se ve el total de basura per capita sumada en el eje x<br>"
                                               "En el eje y se encuentran los años(2010 y 2019)<br>"
@@ -562,7 +567,7 @@ class Map2010(GUI):
         frame1 = tk.LabelFrame(self, frame_styles, text="Mapa creado con Plotly express")
         frame1.place(rely=0.1, relx=0.05, height=500, width=900)
         # display de HTML Para intentar poner la imagen
-        FrameWeb = HTMLLabel(frame1, html='<img src = "">\
+        FrameWeb = HTMLLabel(frame1, html='<a href="Mapa2010"></a>\
                                           <h3>Grafica de Basura total per capita(promedio)</h3>\
                                               <p>En esta grafica se ve el total de basura sumada de cada pais por año\
                                               </p>\
@@ -594,7 +599,12 @@ class Map2019(GUI):
         label1.pack(side="top")
         frame7 = tk.LabelFrame(self, frame_styles, text="Mapa creado con Plotly express")
         frame7.place(rely=0.1, relx=0.05, height=500, width=900)
-        frame = Frame(frame7, width=600, height=400)
+        FrameWeb = HTMLLabel(frame7, html='<a href="Mapa2019"></a>\
+                                                  <h3>Grafica de Basura total per capita(promedio)</h3>\
+                                                      <p>En esta grafica se ve el total de basura sumada de cada pais por año\
+                                                      </p>\
+                                                          </div>')
+        FrameWeb.pack(fill="both")
 
 
 '''     photo = ImageTk.PhotoImage(Image.open("botellas.png"))
