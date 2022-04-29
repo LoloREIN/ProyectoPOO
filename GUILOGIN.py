@@ -114,8 +114,7 @@ class LoginPage(tk.Tk):
             # toma el valor de el Entry de la contraseña
             password = entry_pw.get()
             # usa la funcion validación la cual retorna Verdadero o Falso
-            # validation = validate(username, password)
-            validation = True
+            validation = validate(username, password)
             # si la validación es verdadera
             if validation:
                 # Crea un pop up message que dice bienvenido usuario
@@ -237,7 +236,7 @@ class Registro(tk.Tk):
                     val = False
                 # si la contraseña no tiene caracter especial-> No segura
                 if not any(char in SpecialSym for char in pw):
-                    tk.messagebox.showerror("Atención", 'Password should have at least one of the symbols $@#')
+                    tk.messagebox.showerror("Atención", 'La contraseña debe al menos tener un caracter especial: $@#')
                     val = False
                 # si cumple todos los parametros entonces
                 if val:
@@ -320,17 +319,17 @@ class MenuBar(tk.Menu):
         menu_maps.add_command(label="2019", command=lambda: parent.show_frame(Map2019))
 
 
+# se crea el objeto de tipo class MyApp() el cual hereda la ventana principal de tk inter
 class MyApp(tk.Tk):
 
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
+
         main_frame = tk.Frame(self, bg="#84CEEB", height=600, width=1024)
         main_frame.pack_propagate(0)
         main_frame.pack(fill="both", expand="true")
         main_frame.grid_rowconfigure(0, weight=1)
         main_frame.grid_columnconfigure(0, weight=1)
-        # self.resizable(0, 0) prevents the app from being resized
-        # self.geometry("1024x600") fixes the applications size
         self.frames = {}
         pages = (Paises, years, Promedio, Map2010, Map2019)
         for F in pages:
@@ -522,18 +521,22 @@ class years(GUI):
         canvas.get_tk_widget().pack(fill="both")
 
 
-class PageTwo(GUI):
+class Map2010(GUI):
     def __init__(self, parent, controller):
         GUI.__init__(self, parent)
-        df = pd.read_csv('mismanaged_plasticwaste.csv')
-        label1 = tk.Label(self.main_frame, bg="grey", font=("Verdana", 20), text="Analisis por años")
-        label1.pack(side="top")
-        frame1 = tk.LabelFrame(self, frame_styles, text="Analisis de basura total")
-        frame1.place(rely=0.1, relx=0.05, height=500, width=450)
-        frame2 = tk.LabelFrame(self, frame_styles, text="Analisis de Basura per Capita")
-        frame2.place(rely=0.1, relx=0.52, height=500, width=450)
 
-        '''mapuno = px.choropleth(data_frame=df,
+        label1 = tk.Label(self.main_frame, font=("Verdana", 20), bg="grey", text=" Mapa 2010")
+        label1.pack(side="top")
+
+
+'''
+        frame1 = tk.LabelFrame(self, frame_styles, text="Mapa creado con Plotly express")
+        frame1.place(rely=0.1, relx=0.05, height=500, width=900)
+        FrameWeb = HTMLLabel(frame1, html='<img src ="botellas.png">')
+        FrameWeb.pack(fill="both")
+        label = Label(frame1, image=ImageTk.PhotoImage(Image.open("diez.png")))
+        label.pack()'''
+'''     mapuno = px.choropleth(data_frame=df,
                                locations="Country",
                                locationmode='country names',
                                color="Total_MismanagedPlasticWaste_2010 (millionT)",
@@ -546,35 +549,7 @@ class PageTwo(GUI):
         app = dash.Dash()
         app.layout = html.Div([
             dcc.Graph(figure= mapuno)
-        ])
-
-        mapdos = px.choropleth(data_frame=df,
-                               locations="Country",
-                               locationmode='country names',
-                               color="Total_MismanagedPlasticWaste_2019 (millionT)",
-                               color_continuous_scale='Viridis',
-                               width=1000,
-                               height=500,
-                               title="Mismanaged plastic waste for each country in 2019"
-                               )
-
-
-        app.run_server(debug=True, use_reloader=False)'''
-
-
-class Map2010(GUI):
-    def __init__(self, parent, controller):
-        GUI.__init__(self, parent)
-
-        label1 = tk.Label(self.main_frame, font=("Verdana", 20), bg="grey", text=" Mapa 2010")
-        label1.pack(side="top")
-'''
-        frame1 = tk.LabelFrame(self, frame_styles, text="Mapa creado con Plotly express")
-        frame1.place(rely=0.1, relx=0.05, height=500, width=900)
-        FrameWeb = HTMLLabel(frame1, html='<img src ="botellas.png">')
-        FrameWeb.pack(fill="both")
-        label = Label(frame1, image=ImageTk.PhotoImage(Image.open("diez.png")))
-        label.pack()'''
+        ])'''
 
 
 class Map2019(GUI):
@@ -586,10 +561,27 @@ class Map2019(GUI):
         frame7 = tk.LabelFrame(self, frame_styles, text="Mapa creado con Plotly express")
         frame7.place(rely=0.1, relx=0.05, height=500, width=900)
         frame = Frame(frame7, width=600, height=400)
-        photo = ImageTk.PhotoImage(Image.open("botellas.png"))
+
+
+'''     photo = ImageTk.PhotoImage(Image.open("botellas.png"))
         vlabel = tk.Label(self, text="", image=photo)
         vlabel.image = photo
         vlabel.place(x=-1, y=-5, relwidth=1, relheight=1)
+'''
+'''
+
+        mapdos = px.choropleth(data_frame=df,
+                       locations="Country",
+                       locationmode='country names',
+                       color="Total_MismanagedPlasticWaste_2019 (millionT)",
+                       color_continuous_scale='Viridis',
+                       width=1000,
+                       height=500,
+                       title="Mismanaged plastic waste for each country in 2019"
+                       )
+
+
+app.run_server(debug=True, use_reloader=False)'''
 
 
 class Promedio(GUI):
@@ -602,21 +594,23 @@ class Promedio(GUI):
         frame_Prom.place(rely=0.1, relx=0.05, height=500, width=900)
         WPW = 'mismanaged_plasticwaste.csv'
         datos = pd.read_csv(WPW)
-        datos['Promedio(millionT)'] = ((datos['Total_MismanagedPlasticWaste_2010 (millionT)'] + datos['Total_MismanagedPlasticWaste_2019 (millionT)']) / 2).astype(float)
-        datos['MissMAnaged Prom'] = ((datos['Mismanaged_PlasticWaste_PerCapita_2010 (kg per year) '] + datos['Mismanaged_PlasticWaste_PerCapita_2010 (kg per year) ']) / 2).astype(float)
+        datos['Promedio(millionT)'] = ((datos['Total_MismanagedPlasticWaste_2010 (millionT)'] +
+                                        datos['Total_MismanagedPlasticWaste_2019 (millionT)']) / 2).astype(float)
+        datos['Prom PerCapita'] = ((datos['Mismanaged_PlasticWaste_PerCapita_2010 (kg per year) '] +
+                                      datos['Mismanaged_PlasticWaste_PerCapita_2019 (kg per year) ']) / 2).astype(float)
         datos.sort_values(["Promedio(millionT)"],
                           axis=0,
                           ascending=[False],
                           inplace=True)
-        x1 = datos["MissMAnaged Prom"].head(15)
+        x1 = datos["Prom PerCapita"].head(15)
         y1 = datos['Promedio(millionT)'].head(15)
         county = datos["Country"].head(15)
         figura = plt.figure()
-        sns.scatterplot(x=x1, y=county, data=datos, size=y1, palette="deep")
+        sns.scatterplot(x=y1, y=county, data=datos, size=x1, palette="deep")
         sns.set_style("darkgrid")
-        plt.xlabel("Año")
-        plt.ylabel("\nPromedio de Basura", labelpad=0)
-        plt.title('Promedio de Basura de Plastico Desatendida per capita \n 2010 vs 2019')
+        plt.xlabel("Promedio de basura(2010+2019)/2")
+        plt.ylabel("Paises", labelpad=0)
+        plt.title('Promedio de Basura de Plastico Desatendida per capita')
         canvas = FigureCanvasTkAgg(figura, master=frame_Prom)
         canvas.draw()
         canvas.get_tk_widget().pack(fill="both")
