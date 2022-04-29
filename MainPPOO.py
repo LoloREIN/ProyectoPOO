@@ -518,7 +518,7 @@ class years(GUI):
         canvas = FigureCanvasTkAgg(fig, master=frame1)
         canvas.draw()
         canvas.get_tk_widget().pack(fill="both")
-        FrameWeb = HTMLLabel(frame1, html="<h2>Grafica de Basura total(Promedio)</h2>\
+        FrameWeb = HTMLLabel(frame1, html="<h2><strong>Grafica de Basura total(Promedio)</strong></h2>\
                                       <p>En esta grafica se ve el total de basura sumada de cada pais por año\
                                       </p>\
                                           </div>")
@@ -539,7 +539,7 @@ class years(GUI):
         canvas = FigureCanvasTkAgg(fig, master=frame2)
         canvas.draw()
         canvas.get_tk_widget().pack(fill="both")
-        FrameWeb = HTMLLabel(frame1, html="<h3>Grafica de Basura total per capita(promedio)</h3>\
+        FrameWeb = HTMLLabel(frame2, html="<h3>Grafica de Basura total per capita(promedio)</h3>\
                                               <p>En esta grafica se ve el total de basura sumada de cada pais por año\
                                               </p>\
                                                   </div>")
@@ -550,16 +550,18 @@ class Map2010(GUI):
     def __init__(self, parent, controller):
         GUI.__init__(self, parent)
 
-        label1 = tk.Label(self.main_frame, font=("Verdana", 20), bg="grey", text=" Mapa 2010")
+        label1 = tk.Label(self.main_frame, bg="grey", font=("Verdana", 20), text="Analisis por años")
         label1.pack(side="top")
 
-
-'''
         frame1 = tk.LabelFrame(self, frame_styles, text="Mapa creado con Plotly express")
         frame1.place(rely=0.1, relx=0.05, height=500, width=900)
-        FrameWeb = HTMLLabel(frame1, html='<img src ="botellas.png">')
+        FrameWeb = HTMLLabel(frame1, html='<img src = "">\
+                                          <h3>Grafica de Basura total per capita(promedio)</h3>\
+                                              <p>En esta grafica se ve el total de basura sumada de cada pais por año\
+                                              </p>\
+                                                  </div>')
         FrameWeb.pack(fill="both")
-        label = Label(frame1, image=ImageTk.PhotoImage(Image.open("diez.png")))
+'''        label = Label(frame1, image=ImageTk.PhotoImage(Image.open("diez.png")))
         label.pack()'''
 '''     mapuno = px.choropleth(data_frame=df,
                                locations="Country",
@@ -635,11 +637,15 @@ class Promedio(GUI):
         sns.set_style("darkgrid")
         plt.xlabel("Promedio de basura(2010+2019)/2")
         plt.ylabel("Paises", labelpad=0)
-        plt.title('Promedio de Basura de Plastico Desatendida per capita')
+        plt.title('Promedio de Basura de Plastico Desatendida')
         canvas = FigureCanvasTkAgg(figura, master=frame_Prom)
         canvas.draw()
         canvas.get_tk_widget().pack(fill="both")
-
+        FrameWeb = HTMLLabel(frame_Prom, html="<h3>Promedio de Basura de Plastico Desatendida</h3>\
+                                                      <p>En esta grafica se ve el total de basura sumada de cada pais por año\
+                                                      </p>\
+                                                          </div>")
+        FrameWeb.pack(fill="both", side="bottom")
 
 # se crea el login
 top = LoginPage()
