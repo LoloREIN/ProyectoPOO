@@ -20,8 +20,6 @@ from PIL import ImageTk, Image
 import matplotlib.pyplot as plt
 import seaborn as sns
 from tkhtmlview import HTMLLabel
-import dash
-
 
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,
